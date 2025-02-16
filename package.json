@@ -1,0 +1,14 @@
+{
+  "name": "data_visualisation",
+  "version": "1.0.0",
+  "description": "Implementation of a data visualisation idea using 2 datasets: Global Air Pollution and Life Expectancy(WHO)",
+  "main": "index.html",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Vinnie",
+  "license": "ISC",
+  "dependencies": {
+    "d3": "^7.9.0"
+  }
+}
