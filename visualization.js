@@ -1,4 +1,4 @@
-const width = 1000;
+const width = window.innerWidth * 0.8;
 const height = 900;
 
 const svg = d3.select("body").append("svg")
@@ -22,9 +22,23 @@ d3.csv("data/merged_data.csv").then(function(data) {
         .range([height - 100, 50]);
 
 
-    const colorScale = d3.scaleThreshold()
-        .domain([1e6, 1e7, 5e7, 1e8, 5e8, 1e9])
-        .range(["#008F8C", "#00C2CB", "#5EF38C", "#FFD23F", "#FF7D00", "#D72638", "#F20089"]);
+    function getColor(value) {
+        if (value > 0 && value < 1000000) {
+            return "#008F8C";
+        } else if (value >= 1000000 && value < 10000000) {
+            return "#00C2CB";
+        } else if (value >= 10000000 && value < 50000000) {
+            return "#5EF38C";
+        } else if (value >= 50000000 && value < 100000000) {
+            return "#FFD23F";
+        } else if (value >= 100000000 && value < 500000000) {
+            return "#FF7D00";
+        } else if (value >= 500000000 && value < 1000000000) {
+            return "#D72638";
+        } else {
+            return "#F20089";
+        }
+    }
 
     svg.append("g")
         .attr("transform", `translate(0,${height - 100})`)
@@ -34,13 +48,32 @@ d3.csv("data/merged_data.csv").then(function(data) {
         .attr("transform", `translate(50,0)`)
         .call(d3.axisLeft(yScale));
 
+        svg.append("text")
+        .attr("class", "axis-label")
+        .attr("x", width / 2)
+        .attr("y", height - 30) 
+        .attr("text-anchor", "middle")
+        .style("font-size", "20px")
+        .style("text-decoration", "underline")
+        .text("Air Quality Index (AQI)");
+
+    svg.append("text")
+        .attr("class", "axis-label")
+        .attr("x", -height / 2) 
+        .attr("y", 20) 
+        .attr("text-anchor", "middle")
+        .style("font-size", "20px")
+        .style("text-decoration", "underline")
+        .attr("transform", "rotate(-90)")
+        .text("Life Expectancy in years");
+
     svg.selectAll("circle")
         .data(data)
         .enter().append("circle")
         .attr("cx", d => xScale(d.aqi_value))
         .attr("cy", d => yScale(d.life_expectancy))
         .attr("r", 8) 
-        .attr("fill", d => colorScale(d.population))
+        .attr("fill", d => getColor(d.population))
         .attr("stroke", "black")
         .attr("opacity", 0.7);
 
@@ -53,35 +86,3 @@ d3.csv("data/merged_data.csv").then(function(data) {
         .style("font-size", "10px")
         .style("fill", "black");
 });
-
-const legendWidth = 600;
-const legendHeight = 20;
-const legendMargin = { top: 20, right: 20, bottom: 50, left: 50 };
-
-
-const legend = svg.append("g")
-    .attr("transform", `translate(${legendMargin.left},${height - 70})`);
-
-legend.selectAll("rect")
-    .data(colorScale.range())
-    .enter().append("rect")
-    .attr("x", (d, i) => i * (legendWidth / colorScale.range().length))
-    .attr("width", legendWidth / colorScale.range().length)
-    .attr("height", legendHeight)
-    .attr("fill", d => d);
-
-legend.selectAll("text")
-    .data(colorScale.domain())
-    .enter().append("text")
-    .attr("x", (d, i) => i * (legendWidth / colorScale.range().length) + (legendWidth / colorScale.range().length) / 2)
-    .attr("y", legendHeight + 10)
-    .attr("text-anchor", "middle")
-    .style("font-size", "12px")
-    .text(d => {
-        if (d === 1e6) return "1M";
-        if (d === 1e7) return "10M";
-        if (d === 5e7) return "50M";
-        if (d === 1e8) return "100M";
-        if (d === 5e8) return "500M";
-        if (d === 1e9) return "1B";
-    });
