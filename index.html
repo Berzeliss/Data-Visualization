@@ -5,6 +5,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>Life Expectancy and Air Quality Index</title>
         <script src="https://d3js.org/d3.v7.min.js"></script>
+        <link rel="stylesheet" href="style.css" />
     </head>
     <body>
         <header>
@@ -12,5 +13,41 @@
         </header>
         <div id="scatter-plot"></div>
         <script src="visualization.js"></script>
+        
+        <h2>Colous for Population mass</h2>
+        <table>
+            <tr>
+                <th>Colour</th>
+                <th>Population</th>
+            </tr>
+            <tr>
+                <td><span class="color-box" style="background-color: #008F8C;"></span></td>
+                <td>0 to 1 million</td>
+            </tr>
+            <tr>
+                <td><span class="color-box" style="background-color: #00C2CB;"></span></td>
+                <td>1 million to 10 million</td>
+            </tr>
+            <tr>
+                <td><span class="color-box" style="background-color: #5EF38C;"></span></td>
+                <td>10 million to 50 million</td>
+            </tr>
+            <tr>
+                <td><span class="color-box" style="background-color: #FFD23F;"></span></td>
+                <td>50 million to 100 million</td>
+            </tr>
+            <tr>
+                <td><span class="color-box" style="background-color: #FF7D00;"></span></td>
+                <td>100 million to 500 million</td>
+            </tr>
+            <tr>
+                <td><span class="color-box" style="background-color: #D72638;"></span></td>
+                <td>500 million to 1 billion</td>
+            </tr>
+            <tr>
+                <td><span class="color-box" style="background-color: #F20089;"></span></td>
+                <td>1 billion+</td>
+            </tr>
+        </table>
     </body>
 </html>
