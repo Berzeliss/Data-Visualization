@@ -5,12 +5,18 @@ const svg = d3.select("body").append("svg")
   .attr("width", width)
   .attr("height", height);
 
+const tooltip = d3.select("body").append("div")
+    .attr("id", "tooltip")
+    .attr("class", "tooltip")
+    .style("opacity", 0);
+
 d3.csv("data/merged_data.csv").then(function(data) {
 
     data.forEach(d => {
         d.aqi_value = +d.aqi_value;
         d.life_expectancy = +d['Life expectancy'];
         d.population = +d['2022 Population'];
+        d.country = d['Country'];
     });
 
     const xScale = d3.scaleLinear()
@@ -20,7 +26,6 @@ d3.csv("data/merged_data.csv").then(function(data) {
     const yScale = d3.scaleLinear()
         .domain([d3.min(data, d => d.life_expectancy), d3.max(data, d => d.life_expectancy)])
         .range([height - 100, 50]);
-
 
     function getColor(value) {
         if (value > 0 && value < 1000000) {
@@ -48,7 +53,7 @@ d3.csv("data/merged_data.csv").then(function(data) {
         .attr("transform", `translate(50,0)`)
         .call(d3.axisLeft(yScale));
 
-        svg.append("text")
+    svg.append("text")
         .attr("class", "axis-label")
         .attr("x", width / 2)
         .attr("y", height - 30) 
@@ -75,14 +80,23 @@ d3.csv("data/merged_data.csv").then(function(data) {
         .attr("r", 8) 
         .attr("fill", d => getColor(d.population))
         .attr("stroke", "black")
-        .attr("opacity", 0.7);
-
-    svg.selectAll("text")
-        .data(data)
-        .enter().append("text")
-        .attr("x", d => xScale(d.aqi_value) + 5)
-        .attr("y", d => yScale(d.life_expectancy))
-        .text(d => d.country)
-        .style("font-size", "10px")
-        .style("fill", "black");
+        .attr("opacity", 0.7)
+        .on("mouseover", function(event, d) {
+            tooltip.transition().duration(200).style("opacity", 1);
+            tooltip.html(`
+                <strong>${d.country}</strong><br>
+                Life Expectancy: ${d.life_expectancy.toFixed(1)} years<br>
+                AQI: ${d.aqi_value.toFixed(1)}<br>
+                Population: ${d.population.toLocaleString()}
+            `)
+            .style("left", (event.pageX + 10) + "px")
+            .style("top", (event.pageY - 20) + "px");
+        })
+        .on("mousemove", function(event) {
+            tooltip.style("left", (event.pageX + 10) + "px")
+                   .style("top", (event.pageY - 20) + "px");
+        })
+        .on("mouseout", function() {
+            tooltip.transition().duration(500).style("opacity", 0);
+        });
 });
