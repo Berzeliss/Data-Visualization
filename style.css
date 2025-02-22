@@ -51,7 +51,6 @@ svg {
 
 .tooltip {
     position: absolute;
-    background-color: white;
     padding: 8px;
     border: 1px solid black;
     border-radius: 5px;
