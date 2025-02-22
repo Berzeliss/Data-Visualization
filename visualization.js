@@ -89,8 +89,6 @@ d3.csv("data/merged_data.csv").then(function(data) {
                 AQI: ${d.aqi_value.toFixed(1)}<br>
                 Population: ${d.population.toLocaleString()}
             `)
-            .style("left", (event.pageX + 10) + "px")
-            .style("top", (event.pageY - 20) + "px");
         })
         .on("mousemove", function(event) {
             tooltip.style("left", (event.pageX + 10) + "px")
